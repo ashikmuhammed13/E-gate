@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Air Waybill</title>
+   <style>
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+}
+
+.airwaybill-container {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    border: 1px solid #000;
+}
+
+/* Header modifications */
+.awb-number {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 20px;
+    font-size: 14px;
+}
+
+/* Grid layout updates */
+.main-grid {
+    display: grid;
+    grid-template-columns: 60% 20% 20%;
+    border-collapse: collapse;
+}
+
+.cell {
+    border: 1px solid #000;
+    padding: 6px;
+    font-size: 11px;
+}
+
+/* Routing section updates */
+.routing-grid {
+    display: grid;
+    grid-template-columns: 100px 80px 60px 80px 60px auto;
+    border-top: 1px solid #000;
+}
+
+/* Goods table modifications */
+.goods-section {
+    display: grid;
+    grid-template-columns: 50px 80px 40px 100px 80px 100px auto;
+    border: 1px solid #000;
+}
+
+.goods-cell {
+    border: 1px solid #000;
+    padding: 4px;
+    font-size: 11px;
+    height: 100%;
+}
+
+/* Charges section updates */
+.charges-grid {
+    display: grid;
+    grid-template-columns: 33.33% 33.33% 33.33%;
+}
+
+.charge-box {
+    border: 1px solid #000;
+    padding: 5px;
+    min-height: 30px;
+    position: relative;
+}
+
+/* Signature section updates */
+.signature-section {
+    border-top: 1px solid #000;
+    padding: 15px;
+    text-align: left;
+}
+
+.dotted-signature-line {
+    border-top: 1px dotted #000;
+    margin: 20px 0;
+}
+
+/* Footer updates */
+.footer {
+    text-align: center;
+    padding: 10px;
+    border-top: 1px solid #000;
+}
+
+/* Additional utility classes */
+.text-right {
+    text-align: right;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.small-text {
+    font-size: 10px;
+    line-height: 1.2;
+}
+   </style>
+</head>
+<body>
+  <div class="airwaybill-container">
+    <div class="awb-number">
+        <span>176-73317996</span>
+        <span>176-73317996</span>
+    </div>
+
+    <div class="main-grid">
+        <div class="cell">
+            <div>Shipper's Name and Address</div>
+            <strong>SAUDI ARABIAN OIL COMPANY (ARAMCO)</strong><br>
+            <strong>MATERIAL SUPPORT SECTION</strong><br>
+            <strong>AVIATION DEPARTMENT</strong><br>
+            <strong>SAUDI ARABIA</strong><br>
+            <strong>PHONE: +96613877533</strong>
+        </div>
+        <div class="cell">
+            <div>Shipper's Account Number</div>
+        </div>
+        <div class="cell">
+            <div>Not Negotiable</div>
+            <div>Issued by: EK</div>
+            <div class="small-text">Copies 1, 2 and 3 of this Air Waybill are originals and have the same validity.</div>
+        </div>
+    </div>
+
+    <div class="consignee-grid">
+        <div class="cell">
+            <div>Consignee's Name and Address</div>
+            <strong>DEXTRANS WORLDWIDE KOREA CO., LTD.</strong><br>
+            RM 2201, 90, CENTUMJUNGANG-RO,<br>
+            HAEUNDAE-GU, BUSAN, 48059, KOREA<br>
+            TEL: +82708311566, BRN: 6072660264<br>
+            EMAIL: GWEN.CHO@DEXTRANSGROUP.COM
+        </div>
+        <div class="cell account-number">
+            <div>Consignee's Account Number</div>
+        </div>
+        <div class="cell terms">
+            <div class="small-text">It is agreed that the goods described herein are accepted in apparent good order...</div>
+        </div>
+    </div>
+
+    <div class="routing-grid">
+        <div class="cell">DMM - SAUDI ARABIA</div>
+        <div class="cell">DXB</div>
+        <div class="cell">EK</div>
+        <div class="cell">ICN</div>
+        <div class="cell">EK</div>
+        <div class="cell">SAR</div>
+    </div>
+
+    <div class="goods-section">
+        <div class="cell">10</div>
+        <div class="cell">7171.00</div>
+        <div class="cell">K G</div>
+        <div class="cell">7171.00</div>
+        <div class="cell">5.57</div>
+        <div class="cell text-right">40000.00</div>
+        <div class="cell">
+            CONSOLIDATED<br>
+            DIM 120 X 120 X 107 @ 10
+        </div>
+    </div>
+
+    <div class="charges-grid">
+        <div class="charge-box text-right">40000.00</div>
+        <div class="charge-box">&nbsp;</div>
+        <div class="charge-box">Total Other Charges Due Carrier</div>
+    </div>
+
+    <div class="signature-section">
+        <div class="small-text">
+            Shipper certifies that particulars on the face hereof are correct...
+        </div>
+        <div>SMSA EXPRESS TRANSPORTATION CO., LTD</div>
+        <div class="dotted-signature-line"></div>
+        <div>Signature of Shipper or his Agent</div>
+        <div class="text-right">03/11/2024</div>
+    </div>
+
+    <div class="footer">
+        ORIGINAL 3 (FOR SHIPPER)
+    </div>
+</div>
+</body>
+</html>
