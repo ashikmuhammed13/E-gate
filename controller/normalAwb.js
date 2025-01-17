@@ -240,4 +240,78 @@ module.exports = {
             });
         }
     },
+  // controller/normalAwb.js
+
+
+    // Display tracking search page
+    getTrackingPage: async (req, res) => {
+      try {
+         
+        const recentSearches = await Shipment.find()
+          .sort({ updatedAt: -1 })
+          .limit(3)
+          .select('awbNumber');
+          
+        res.render('admin/track', { recentSearches }); // Changed from 'tracking/index' to 'admin/track'
+      } catch (error) {
+        console.error('Error loading tracking page:', error);
+        res.render('admin/track', { error: 'Failed to load tracking page' }); // Changed here too
+      }
+    },
+  
+    // Track shipment by AWB
+    trackShipment: async (req, res) => {
+     
+      try {
+        const { awbNumber } = req.body; 
+       
+        const shipment = await Shipment.findOne({ awbNumber })
+          .populate('sender.savedAddress')
+          .populate('receiver.savedAddress');
+          const recentSearches = await Shipment.find()
+          .sort({ updatedAt: -1 })
+          .limit(3)
+          .select('awbNumber');
+        if (!shipment) {
+          return res.render('admin/track', { recentSearches,
+            error: 'Shipment not found',
+            searchedAwb: awbNumber 
+          });
+        }
+  
+        // Calculate timeline progress
+        const statusOrder = [
+          'Created', 'Pickup Scheduled', 'Picked Up', 
+          'In Transit', 'Out for Delivery', 'Delivered'
+        ];
+        const currentStatusIndex = statusOrder.indexOf(shipment.status);
+        const progress = ((currentStatusIndex) / (statusOrder.length - 1)) * 100;
+        const { format } = require('date-fns');
+        const formattedDate = shipment.expectedArrivalDate 
+          ? format(new Date(shipment.expectedArrivalDate), 'yyyy-MM-dd')
+          : null;
+
+        
+console.log(shipment.timeline); // Check if this outputs the expected array
+
+        
+        res.render('admin/track', {
+          shipment,
+          progress,
+          statusOrder,
+          currentStatusIndex,
+          formattedDate,
+          recentSearches
+        });
+  
+      } catch (error) {
+        console.error('Error tracking shipment:', error);
+        res.render('admin/track', {  // Changed from 'tracking/index' to 'admin/track'
+          error: 'Failed to track shipment',
+          searchedAwb: req.params.awbNumber ,
+          recentSearches
+        });
+      }
+    
+  },
   };

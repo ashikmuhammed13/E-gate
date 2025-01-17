@@ -5,7 +5,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const mongoDbStore = require("connect-mongodb-session")(session); // Import and configure mongoDbStore
-const hbs = require("express-handlebars")
+const handlebar          = require("express-handlebars")       
 const cors = require('cors'); // To handle CORS issues in development
 
 require('dotenv').config();
@@ -36,14 +36,14 @@ const store = new mongoDbStore({
 });
 
 app.use(session({
-    secret: process.env.SECRET_KEY,
+    secret: "gjhghj",
     resave: false,
     saveUninitialized: false,
     cookie: { maxAge: 600000 * 24 },
     store: store
 }));
 
-// app.use("/", user);
+app.use("/", user);
 app.use("/admin", admin);
 
 // Error handling middleware
@@ -52,6 +52,80 @@ app.use((err, req, res, next) => {
     res.status(500).send('Something broke!');
 });
 
+const hbs = require('hbs'); 
+const moment = require('moment');  // Import moment.js
+
+// Register the moment helper
+hbs.registerHelper('moment', function(date, format) {
+    return moment(date).format(format);
+});
+
+// Register the custom helper for less than or equal
+hbs.registerHelper('lessThanOrEqual', function(a, b) {
+    return a <= b;
+});
+// In server.js
+hbs.registerHelper('formatDate', function(dateString) {
+    try {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        if (isNaN(date)) return 'Invalid Date';
+        
+        return date.toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        });
+    } catch (error) {
+        console.error('Date formatting error:', error);
+        return 'Date Error';
+    }
+});
+const Handlebars = require('handlebars');
+
+Handlebars.registerHelper('formatDate', function(date) {
+    return new Date(date).toLocaleString();
+});
+const { parseISO, isValid, format } = require('date-fns');
+
+const hbsInstance = hbs.create({
+  helpers: {
+    formatDate: function (date) {
+      try {
+        // Parse the date string
+        const parsedDate = parseISO(date);
+
+        // Check if the parsed date is valid
+        if (!isValid(parsedDate)) {
+          throw new Error("Invalid date format");
+        }
+
+        // Format the date as "05 Jun 2019"
+        return format(parsedDate, 'dd MMM yyyy');
+      } catch (error) {
+        console.error("Date Formatting Error:", error);
+        return 'Invalid Date'; // Fallback for invalid dates
+      }
+    },
+    json: function (context) {
+      return JSON.stringify(context, null, 2); // Pretty-print JSON for debugging
+    }
+  }
+});
+
+
+hbs.registerHelper('formatDate', function(date) {
+    return new Date(date).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+});
+hbs.registerHelper('json', function(context) {
+    return JSON.stringify(context);
+});
 // Start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

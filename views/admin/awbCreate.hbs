@@ -9,8 +9,14 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
     <style>
         :root {
-            --sidebar-width: 250px;
-        }
+    --sidebar-width: 280px;
+    --sidebar-bg: rgba(15, 23, 42, 0.95);
+    --sidebar-hover: rgba(30, 41, 59, 0.8);
+    --neon-accent: #0ea5e9;
+    --neon-glow: 0 0 10px rgba(14, 165, 233, 0.5);
+    --glass-effect: blur(10px);
+}
+
 
         .wrapper {
             display: flex;
@@ -24,6 +30,53 @@
             margin-right: 10px;
             color: #28a745;
         }
+
+.address-result {
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.address-result:hover {
+    background-color: #f8f9fa;
+}
+.address-result {
+    transition: background-color 0.2s ease;
+}
+
+.address-result:hover {
+    background-color: #f8f9fa;
+}
+
+.search-box {
+    position: relative;
+}
+
+#senderSearchResults,
+#receiverSearchResults {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #dee2e6;
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    z-index: 1000;
+    max-height: 200px;
+    overflow-y: auto;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.search-box {
+    position: relative;
+}
+
+.search-results {
+    border: 1px solid #dee2e6;
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+}
+
 /* Add these styles in your existing <style> section */
     .btn-create-shipment {
     background: linear-gradient(45deg, #2c3e50, #3498db);
@@ -53,35 +106,101 @@
             margin-left: 4px;
         }
         /* Sidebar Styles */
-        .sidebar {
-            width: var(--sidebar-width);
-            background: #2c3e50;
-            color: white;
-            position: fixed;
-            height: 100vh;
-            transition: all 0.3s;
-        }
+         /* Modern Sidebar Variables */
 
-        .sidebar .logo {
-            padding: 20px;
-            background: #243342;
-        }
+/* Sidebar Base Styles */
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    backdrop-filter: var(--glass-effect);
+    -webkit-backdrop-filter: var(--glass-effect);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    position: fixed;
+    height: 100vh;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto;
+    scrollbar-width: none; /* Firefox */
+}
 
-        .sidebar .nav-link {
-            color: #ecf0f1;
-            padding: 15px 20px;
-            transition: all 0.3s;
-        }
+.sidebar::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+}
 
-        .sidebar .nav-link:hover {
-            background: #34495e;
-            color: #3498db;
-        }
+/* Logo Section */
+.sidebar .logo {
+    padding: 2rem 1.5rem;
+    background: linear-gradient(
+        to bottom,
+        rgba(15, 23, 42, 0.98),
+        rgba(15, 23, 42, 0.95)
+    );
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
 
-        .sidebar .nav-link i {
-            margin-right: 10px;
-            font-size: 1.2rem;
-        }
+.sidebar .logo h4 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    background: linear-gradient(120deg, #fff, var(--neon-accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    letter-spacing: 0.5px;
+}
+
+/* Navigation Links */
+.sidebar .nav-link {
+    color: rgba(255, 255, 255, 0.7);
+    padding: 1rem 1.5rem;
+    margin: 0.3rem 0.8rem;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.sidebar .nav-link:hover {
+    background: var(--sidebar-hover);
+    color: var(--neon-accent);
+    box-shadow: var(--neon-glow);
+}
+
+.sidebar .nav-link i {
+    margin-right: 1rem;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+/* Active Link Styles */
+.sidebar .nav-link.active-nav-link {
+    background: rgba(14, 165, 233, 0.15);
+    color: var(--neon-accent);
+    box-shadow: var(--neon-glow);
+}
+
+.sidebar .nav-link.active-nav-link::before {
+    content: '';
+    position: absolute;
+    left: -0.8rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 20px;
+    background: var(--neon-accent);
+    border-radius: 0 4px 4px 0;
+    box-shadow: var(--neon-glow);
+}
+
+/* Hover Effects */
+.sidebar .nav-link:hover i {
+    transform: translateX(3px);
+    color: var(--neon-accent);
+}
+
+/* Navigation Group */
+.nav.flex-column {
+    padding: 1rem 0;
+}
 
         /* Main Content Styles */
         .main-content {
@@ -248,25 +367,35 @@
             <div class="logo">
                 <h4 class="mb-0">E Gate Shipping</h4>
             </div>
-            <div class="nav flex-column">
-                <a href="/track"class="nav-link">
-                    <i class="bi bi-search"></i>
+             <div class="nav flex-column">
+                <a href="/admin/track"class="nav-link">
+                    <i class="bi bi-truck"></i> 
                     Tracking
                 </a>
-                <a href="/awbCreate" class="nav-link active-nav-link">
-                    <i class="bi bi-plus-circle"></i>
+
+               <a href="/admin/createAwb"class="nav-link active-nav-link">
+                    <i class="bi bi-files"></i>
                     Create AWB
                 </a>
+                <a href="/awbCreate" class="nav-link ">
+                    <i class="bi bi-file-text"></i> 
+                    House AWB
+                </a>
+                <a href="/awbCreate" class="nav-link ">
+                    <i class="bi bi-file-earmark-break"></i> 
+                    Master AWB
+                </a>
+
                 <a href="/updateAwb" class="nav-link">
                     <i class="bi bi-pencil-square"></i>
                     Update AWB
                 </a>
-                <a href="/allShipment" class="nav-link">
-                    <i class="bi bi-box-seam"></i>
+                <a href="/allShipment" class="nav-link ">
+                    <i class="bi bi-boxes"></i>
                     All Shipments
                 </a>
-                <a href="/admin" class="nav-link">
-                    <i class="bi bi-person-circle "></i>
+                <a href="/admin/profile"class="nav-link">
+                    <i class="bi bi-gear"></i>
                     Admin Profile
                 </a>
             </div>
@@ -312,14 +441,21 @@
                         <h4>Ship from</h4>
                     </div>
                 
-                    <div class="search-box">
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="SEARCH IN ADDRESS BOOK">
-                            <button class="btn btn-outline-secondary" type="button">
-                                <i class="bi bi-search"></i>
-                            </button>
-                        </div>
-                    </div>
+                   <div class="search-box mb-3">
+    <div class="input-group">
+        <input type="text" 
+               class="form-control" 
+               name="senderSearchInput"
+               placeholder="SEARCH IN ADDRESS BOOK"
+               oninput="searchAddresses('sender')">
+        <button class="btn btn-outline-secondary" type="button">
+            <i class="bi bi-search"></i>
+        </button>
+    </div>
+    <div id="senderSearchResults" class="position-absolute bg-white w-100 shadow-sm" 
+         style="z-index: 1000; max-height: 200px; overflow-y: auto;">
+    </div>
+</div>
                 
                     <div class="row">
                         <!-- Contact Details -->
@@ -399,14 +535,21 @@
                         <h4>Deliver To</h4>
                     </div>
                 
-                    <div class="search-box">
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="SEARCH IN ADDRESS BOOK">
-                            <button class="btn btn-outline-secondary" type="button">
-                                <i class="bi bi-search"></i>
-                            </button>
-                        </div>
-                    </div>
+                   <div class="search-box mb-3">
+    <div class="input-group">
+        <input type="text" 
+               class="form-control" 
+               name="receiverSearchInput"
+               placeholder="SEARCH IN ADDRESS BOOK"
+               oninput="searchAddresses('receiver')">
+        <button class="btn btn-outline-secondary" type="button">
+            <i class="bi bi-search"></i>
+        </button>
+    </div>
+    <div id="receiverSearchResults" class="position-absolute bg-white w-100 shadow-sm" 
+         style="z-index: 1000; max-height: 200px; overflow-y: auto;">
+    </div>
+</div>
                 
                     <div class="row">
                         <!-- Contact Details -->
