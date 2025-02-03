@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>adminUpdate</title>
+    <!-- CSS Dependencies -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <meta id="awbMeta" name="awb-number" content="{{shipment.awbNumber}}">
+
+    
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --primary-light: #60a5fa;
+            --success: #22c55e;
+            --success-light: #4ade80;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --text: #0f172a;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --border-light: #f1f5f9;
+            --primary-gradient: linear-gradient(135deg, #4361ee 0%, #4895ef 100%);
+    --glass-bg: rgba(255, 255, 255, 0.95);
+    --glass-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+    --card-border: 1px solid rgba(255, 255, 255, 0.18);
+    --neon-glow: 0 0 15px rgba(67, 97, 238, 0.3);
+    --sidebar-width: 280px;
+    --sidebar-bg: rgba(15, 23, 42, 0.95);
+    --sidebar-hover: rgba(30, 41, 59, 0.8);
+    --neon-accent: #0ea5e9;
+    --glass-effect: blur(10px);
+        }
+        .wrapper {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            min-height: 100vh;
+        }
+        /* Sidebar Base Styles */
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    backdrop-filter: var(--glass-effect);
+    -webkit-backdrop-filter: var(--glass-effect);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    position: fixed;
+    height: 100vh;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto;
+    scrollbar-width: none;
+    z-index: 1000;
+}
+
+.sidebar::-webkit-scrollbar {
+    display: none;
+}
+
+/* Logo Section */
+.sidebar .logo {
+    padding: 2rem 1.5rem;
+    background: linear-gradient(
+        to bottom,
+        rgba(15, 23, 42, 0.98),
+        rgba(15, 23, 42, 0.95)
+    );
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.sidebar .logo h4 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    background: linear-gradient(120deg, #fff, var(--neon-accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    letter-spacing: 0.5px;
+}
+
+/* Navigation Links */
+.sidebar .nav-link {
+    color: rgba(255, 255, 255, 0.7);
+    padding: 1rem 1.5rem;
+    margin: 0.3rem 0.8rem;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    position: relative;
+    text-decoration: none;
+}
+
+.sidebar .nav-link:hover {
+    background: var(--sidebar-hover);
+    color: var(--neon-accent);
+    box-shadow: var(--neon-glow);
+}
+
+.sidebar .nav-link i {
+    margin-right: 1rem;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+.sidebar .nav-link.active-nav-link {
+    background: rgba(14, 165, 233, 0.15);
+    color: var(--neon-accent);
+    box-shadow: var(--neon-glow);
+}
+
+.sidebar .nav-link.active-nav-link::before {
+    content: '';
+    position: absolute;
+    left: -0.8rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 20px;
+    background: var(--neon-accent);
+    border-radius: 0 4px 4px 0;
+    box-shadow: var(--neon-glow);
+}
+
+.nav.flex-column {
+    padding: 1rem 0;
+}
+
+        /* Main Container Styles */
+        .tracking-container {
+
+           width: calc(100% - var(--sidebar-width));
+            margin-left: var(--sidebar-width);
+          
+            
+        }
+
+        .tracking-grid {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        /* Status Card Styles */
+        .status-card {
+            background: var(--surface);
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            position: sticky;
+            top: 5rem;
+        }
+
+        .status-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .tracking-number {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .status-badge {
+            background: linear-gradient(135deg, var(--success), var(--success-light));
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        /* Timeline Styles */
+        .timeline-section {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .timeline-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .add-location-btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .add-location-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+
+        .timeline-wrapper {
+            position: relative;
+            padding-left: 4rem;
+            margin-top: 3rem;
+        }
+
+        .timeline-line {
+            position: absolute;
+            left: 18px;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background: var(--border-light);
+            border-radius: 99px;
+        }
+
+        .timeline-progress {
+            position: absolute;
+            left: 18px;
+            top: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, var(--success), var(--primary));
+            border-radius: 99px;
+            transition: height 0.5s ease;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding: 1.5rem 0;
+        }
+
+        .timeline-marker {
+            position: absolute;
+            left: -4rem;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 3px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 2;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 0 6px var(--surface);
+        }
+
+        .timeline-marker::before {
+            content: '';
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(59, 130, 246, 0.1);
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.3s ease;
+        }
+
+        .timeline-marker:hover::before {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .timeline-marker i {
+            font-size: 16px;
+            color: white;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: all 0.3s ease;
+        }
+
+        .timeline-marker.completed {
+            background: var(--success);
+            border-color: var(--success-light);
+        }
+
+        .timeline-marker.active {
+            background: var(--primary);
+            border-color: var(--primary-light);
+            animation: pulse 2s infinite;
+        }
+
+        .timeline-marker.completed i,
+        .timeline-marker.active i {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 15px rgba(59, 130, 246, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+            }
+        }
+
+        .timeline-content {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.75rem;
+            margin-left: 1rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .timeline-content::before {
+            content: '';
+            position: absolute;
+            left: -9px;
+            top: 30px;
+            width: 18px;
+            height: 18px;
+            background: var(--surface);
+            border-left: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            transform: rotate(45deg);
+        }
+
+        .timeline-content:hover {
+            transform: translateX(5px);
+            border-color: var(--primary-light);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Form Styles */
+        .add-location-form {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+            display: none;
+        }
+
+        .form-control, .form-select {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 0.875rem 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            position: absolute;
+            right: 1.5rem;
+            top: 1.5rem;
+            display: flex;
+            gap: 0.5rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .timeline-content:hover .action-buttons {
+            opacity: 1;
+        }
+
+        .btn-icon {
+            background: var(--border-light);
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            transition: all 0.3s ease;
+        }
+
+        .btn-icon:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .btn-icon.delete:hover {
+            background: var(--danger);
+        }
+        </style>
+<body>
+    <div class="wrapper">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="logo">
+                <h4 class="mb-0">E Gate Shipping</h4>
+            </div>
+            <div class="nav flex-column">
+                <a href="/admin/track"class="nav-link ">
+                    <i class="bi bi-truck"></i> 
+                    Tracking
+                </a>
+
+               <a href="/admin/createAwb"class="nav-link">
+                    <i class="bi bi-files"></i>
+                    Create AWB
+                </a>
+                <a href="/admin/hawb" class="nav-link ">
+                    <i class="bi bi-file-text"></i> 
+                    House AWB
+                </a>
+              <a href="/admin/mawb" class="nav-link ">
+                    <i class="bi bi-file-earmark-break"></i> 
+                    Master AWB
+                </a>
+
+                 <a href="/admin/fetchShipment" class="nav-link active-nav-link">
+                    <i class="bi bi-pencil-square"></i>
+                    Update AWB
+                </a>
+               <a href="/admin/getShipment" class="nav-link ">
+                    <i class="bi bi-boxes"></i>
+                    All Shipments
+                </a>
+                <a href="/admin/profile"class="nav-link">
+                    <i class="bi bi-gear"></i>
+                    Admin Profile
+                </a>
+            </div>
+        </nav>
+   
+
+        <div class="tracking-container">
+            <div class="tracking-grid">
+                <!-- Shipment Status Card -->
+                <div class="status-card">
+                    <div class="status-header">
+                        <div>
+                            <span class="status-badge">In Transit</span>
+                            <div class="tracking-number mt-2" id="awbNumber">#{{shipment.awbNumber}}</div>
+                        </div>
+                        <button class="btn-icon" onclick="window.trackingSystem.refresh()">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+    
+                    <div class="status-info">
+    <div class="info-item mb-4">
+        <div class="text-muted mb-2">Expected Delivery</div>
+        <div class="d-flex align-items-center gap-2">
+            <i class="fas fa-clock text-primary"></i>
+            <div>
+                <div class="fw-semibold" id="estimatedDelivery">{{formatDate shipment.estimatedDeliveryDate}}</div>
+                <div class="small text-muted">By End of Day</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="info-item mb-4">
+        <div class="text-muted mb-2">Current Location</div>
+        <div class="d-flex align-items-center gap-2">
+            <i class="fas fa-map-marker-alt text-primary"></i>
+            <div>
+                <div class="fw-semibold" id="currentLocation">{{currentLocation}}</div>
+                <div class="small text-muted" id="facilityType">{{facilityType}}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+                </div>
+    
+                <!-- Timeline Section -->
+                <div class="timeline-section">
+                    <div class="timeline-header">
+                        <h4 class="m-0">Tracking Timeline</h4>
+                        <button class="add-location-btn" onclick="window.trackingSystem.toggleAddLocationForm()">
+                            <i class="fas fa-plus"></i>
+                            Add Location
+                        </button>
+                    </div>
+    
+                    <!-- Add Location Form -->
+                    <div class="add-location-form" id="addLocationForm">
+                        <h5 class="mb-4">Add New Location</h5> 
+                       <form id="locationForm" action="/admin/addLocation/{{shipment.awbNumber}}" method="POST">
+
+    <div class="row g-3">
+        <div class="col-md-6">
+            <input type="text" class="form-control" name="location" placeholder="Location Name" required>
+        </div>
+        <div class="col-md-6">
+            <input type="text" class="form-control" name="description" placeholder="Description">
+        </div>
+        <div class="col-md-6">
+            <select class="form-select" name="status" required>
+                <option value="">Select Status</option>
+                <option value="Picked Up">Picked Up</option>
+                <option value="In Transit">In Transit</option>
+                <option value="Out for Delivery">Out for Delivery</option>
+                <option value="Delivered">Delivered</option>
+            </select>
+        </div>
+        <div class="col-md-6">
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary flex-grow-1">Add Location</button>
+                <button type="button" class="btn btn-light" onclick="window.trackingSystem.toggleAddLocationForm()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+                    </div>
+    
+<div class="container">
+    <div class="timeline-wrapper">
+        <div class="timeline-line"></div>
+        <div class="timeline-progress" id="progressLine"></div>
+        {{#each timeline}}
+<div class="timeline-item" 
+     data-timeline-id="{{this._id}}" 
+     data-status="{{this.status}}"
+     data-completed="{{this.isCompleted}}">
+    <div class="timeline-marker {{#if this.isCompleted}}completed{{else if @last}}active{{/if}}">
+        <i class="fas fa-check"></i>
+    </div>
+    <div class="timeline-content {{#if this.isCompleted}}completed{{else if @last}}active{{/if}}">
+                <div class="location-info">
+                    <h5>{{this.location}}</h5>
+                    <p class="location-address mb-2">
+                        <i class="fas fa-map-marker-alt me-2 text-primary"></i>{{this.description}}
+                    </p>
+                    <div class="d-flex align-items-center gap-3">
+                        <span class="location-timestamp">
+                            <i class="far fa-clock me-2"></i>{{formatDate this.timestamp}}
+                        </span>
+                        <span class="status-badge">
+                            {{this.status}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+</div>
+    
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+   <script>
+     window.trackingSystem = {
+        toggleAddLocationForm: function () {
+            console.log("Toggle button clicked");
+            const form = document.getElementById("addLocationForm");
+            if (form) {
+                form.style.display = form.style.display === "none" || form.style.display === "" ? "block" : "none";
+            } else {
+                console.error("Form not found");
+            }
+        }
+    };
+
+    document.getElementById("locationForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        console.log("Form submitted", Object.fromEntries(formData.entries()));
+        alert("Location added successfully!");
+        window.trackingSystem.toggleAddLocationForm();
+    });
+
+ // Function to append new timeline event to the container
+    function renderTimelineEvent(event) {
+        const timelineContainer = document.getElementById('timeline-container');
+        const eventElement = document.createElement('div');
+        eventElement.className = 'timeline-event';
+        eventElement.innerHTML = `
+            <div>
+                <strong>Location:</strong> ${event.location}
+            </div>
+            <div>
+                <strong>Status:</strong> ${event.status}
+            </div>
+            <div>
+                <strong>Description:</strong> ${event.description || 'N/A'}
+            </div>
+            <div>
+                <strong>Timestamp:</strong> ${new Date(event.timestamp).toLocaleString()}
+            </div>
+        `;
+        timelineContainer.appendChild(eventElement);
+    }
+
+    // Submit form via AJAX
+document.getElementById('locationForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const form = event.target;
+    const formData = new FormData(form);
+    const awbNumber = form.action.split('/').pop();
+
+    try {
+        const response = await fetch(`/admin/addLocation/${awbNumber}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                location: formData.get('location'),
+                status: formData.get('status'),
+                description: formData.get('description')
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error('Server responded with error');
+        }
+
+        const data = await response.json();
+        
+        // Add the new location to the timeline without page refresh
+        const timelineWrapper = document.querySelector('.timeline-wrapper');
+        const newTimelineItem = createTimelineItem(data.timeline[data.timeline.length - 1]);
+        timelineWrapper.appendChild(newTimelineItem);
+        
+        // Reset form and hide it
+        form.reset();
+        window.trackingSystem.toggleAddLocationForm();
+        
+        // Reinitialize timeline system
+        window.timelineSystem = new TimelineSystem();
+
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while adding location.');
+    }
+});
+
+
+function addTimelineEventToUI(event) {
+    const timelineList = document.getElementById('timelineList'); // Assuming an element with this ID
+    const newEvent = document.createElement('li');
+    newEvent.textContent = `${event.timestamp}: ${event.location} (${event.status}) - ${event.description || 'No description'}`;
+    timelineList.appendChild(newEvent);
+}
+
+
+function getCurrentUser() {
+    return document.querySelector('meta[name="user-id"]')?.content || 'system';
+}
+
+class TimelineSystem {
+    constructor() {
+        this.initializeTimeline();
+        this.bindEvents();
+    }
+
+    initializeTimeline() {
+        this.timelineItems = document.querySelectorAll('.timeline-item');
+        this.progressLine = document.getElementById('progressLine');
+        this.updateProgressLine();
+    }
+
+    updateProgressLine() {
+        const completedItems = Array.from(this.timelineItems).filter(
+            item => item.dataset.completed === 'true'
+        );
+        const progressHeight = (completedItems.length / this.timelineItems.length) * 100;
+        this.progressLine.style.height = `${progressHeight}%`;
+    }
+
+    bindEvents() {
+        this.timelineItems.forEach(item => {
+            const marker = item.querySelector('.timeline-marker');
+            marker.addEventListener('click', (e) => {
+                e.preventDefault();
+                const timelineId = item.dataset.timelineId;
+                if (timelineId) {
+                    this.handleTimelineUpdate(item);
+                }
+            });
+        });
+    }
+
+    async handleTimelineUpdate(timelineItem) {
+        try {
+            const timelineId = timelineItem.dataset.timelineId;
+            const currentCompleted = timelineItem.dataset.completed === 'true';
+            const newCompleted = !currentCompleted;
+            const awbNumber = document.getElementById('awbMeta').getAttribute('content');
+
+            // Update UI optimistically
+            this.updateItemUI(timelineItem, newCompleted);
+
+            const response = await this.updateTimelineStatus(timelineId, {
+                isCompleted: newCompleted,
+                timestamp: new Date().toISOString(),
+                updatedBy: getCurrentUser(),
+                awbNumber: awbNumber
+            });
+
+            if (!response.success) {
+                // Revert UI if update failed
+                this.updateItemUI(timelineItem, currentCompleted);
+                throw new Error(response.message);
+            }
+
+            // Update progress line
+            this.updateProgressLine();
+
+        } catch (error) {
+            console.error('Timeline update error:', error);
+            alert(`Error updating timeline: ${error.message}`);
+        }
+    }
+
+    updateItemUI(item, isCompleted) {
+        const marker = item.querySelector('.timeline-marker');
+        const content = item.querySelector('.timeline-content');
+
+        item.dataset.completed = isCompleted.toString();
+
+        if (isCompleted) {
+            marker.classList.add('completed');
+            marker.classList.remove('active');
+            content.classList.add('completed');
+            content.classList.remove('active');
+        } else {
+            marker.classList.remove('completed', 'active');
+            content.classList.remove('completed', 'active');
+        }
+    }
+
+    async updateTimelineStatus(timelineId, updateData) {
+        try {
+            const response = await fetch('/admin/update-timeline', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'same-origin',
+                body: JSON.stringify({
+                    id: timelineId,
+                    ...updateData
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error('Server request failed');
+            }
+
+            return await response.json();
+
+        } catch (error) {
+            throw new Error('Failed to update timeline status');
+        }
+    }
+}
+
+// Initialize timeline system
+document.addEventListener('DOMContentLoaded', () => {
+    window.timelineSystem = new TimelineSystem();
+});
+</script>
+        </body>
+        </html>
